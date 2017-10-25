@@ -1,3 +1,8 @@
+# RoboND-DeepLearning-Project-Solution
+This is my solution of the [Follow Me! Project](https://github.com/udacity/RoboND-DeepLearning-Project) as part of the Robotics Nanodegree by Udacity.
+
+For setup and usage instructions follow the original README reproduced below.
+
 [![Udacity - Robotics NanoDegree Program](https://s3-us-west-1.amazonaws.com/udacity-robotics/Extra+Images/RoboND_flag.png)](https://www.udacity.com/robotics)
 
 ## Deep Learning Project ##
