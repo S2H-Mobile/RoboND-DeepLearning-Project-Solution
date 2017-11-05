@@ -1,5 +1,7 @@
 # RoboND-DeepLearning-Project-Solution
-This is my solution of the [Follow Me! Project](https://github.com/udacity/RoboND-DeepLearning-Project) as part of the Robotics Nanodegree by Udacity.
+This is my solution of the [Follow Me! Project](https://github.com/udacity/RoboND-DeepLearning-Project) as part of the Robotics Nanodegree by Udacity. My network configuration is implemented in [this notebook](https://github.com/S2H-Mobile/RoboND-DeepLearning-Project-Solution/blob/master/code/model_training.ipynb).
+
+I collected additional [training data](https://github.com/S2H-Mobile/RoboND-DeepLearning-Project-Solution/blob/master/data/train_combined.zip) (~ 57 MB download) in the simulator.
 
 For setup and usage instructions follow the original README reproduced below.
 
