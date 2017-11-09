@@ -18,7 +18,7 @@
 \title{Deep Learning Project: Follow Me! \\ Robotics Nanodegree, Udacity}
 
 \author{Stephan Hohne}
-\date{November 5, 2017}
+\date{November 9, 2017}
 
 \begin{document}
 \maketitle
@@ -39,16 +39,39 @@ This report describes my solution of the deep learning project. First I describe
 
 \section{Fully Convolutional Network for Semantic Segmentation}
 \label{sec:fcn_description}
-The goal of this project is to build and train a convolutional neural network that enables a drone to follow a person in a simulated environment.
+For writing this section I used what I learned in the classroom and references \cite{CS231n, Xception, MobileNets}.
 
-The network is supposed to do semantic segmentation of the given scene and detect the location of the hero person. This task can be accomplished with a fully convolutional network (FCN) which consists of convolution layers only. Such architectures are comprised of an encoding and a decoding stage.
+\subsection{Overview}
+The goal of this project is to build and train a neural network that enables a drone to follow a person in a simulated environment.
 
-The encoding stage consists of two separable convolutions followed by a regular $1 \times 1$ convolution. The purpose of the encoder is to extract spatial features from the image. The complexity of the encoded features increases with the number of layers.
-% A deep network able to regognize features with incrasing levels of abstraction. It is better at modeling the hierarchical structure of the data. 
+The network is supposed to do semantic segmentation of the given image and detect the location of the hero person in the scene. To accomplish this goal, each pixel is classified as either belonging to the target person or being part of another person or not being part of any person. If the model were to distinguish more target types (dog, cat, car, etc.), the number of output classes would change. The depth of the final layer would have to be adjusted accordingly, and the network trained with additional labeled image data containing these target types.
 
-The first encoder layers are implemented as depthwise separable convolutions (see \href{https://arxiv.org/pdf/1610.02357.pdf}{this paper}) which perform a spatial convolution while keeping the depth channels separate. The underlying assumption is that the information encoded in the spatial dimensions is independent of the depth channel information, and can be handled separately. This technique reduces the number of parameters, thus increasing efficiency for the encoder network.
+The image segmentation task can be accomplished with a fully convolutional network (FCN). Such architectures consist of convolution layers exclusively.
 
-The final layer in the encoder block is a $1 \times 1$ convolution layer with a stride of one and same padding. The output tensor is of rank four with size $B \times H \times W \times D$ where $B$ is the batch size and $D$ is the filter size. In comparison, a fully connected layer would flatten the output tensor to rank two with size $B \times D$ and thereby loose the spatial information.
+\subsubsection*{Encoding and Decoding}
+The architecture used in this project is comprised of an encoding and a decoding stage. The encoder gradually reduces the spatial size of the image with pooling layers. The decoder scales the feature maps back up to the original size.
+
+The convolution layers in the encoder extract feature maps from the image data. So they learn details about the image which will be used for segmentation. The complexity of the encoded features increases with the number of layers.
+
+The pooling layers in the encoder perform a downsampling operation along the width and height of the image. This enables the model to generalize to unseen input, and it reduces the risk of overfitting to the training data. The drawback of pooling is that the original image gets coarse-grained. The resolution is lowered and some of the corresponding spatial information is lost.
+
+The purpose of the decoder block is to scale the low resolution feature maps up to the original image resolution, so that the network can classify all of the pixels in the input image. 
+ 
+The upsampling operation fills the gaps between missing pixel values by interpolation. The information which was lost during pooling can't be fully restored by the upsampling operation, and the decoder can't recover the spatial resolution completely.
+ 
+To help the decoder recover the object details, skip connections are introduced. They connect the high resolution encoder layers directly to the decoder, so that some of the information from those layers can be restored.  
+
+\subsubsection*{Depthwise Separable Convolution}
+For writing this section I read section 3 in \cite{MobileNets} and section 1 in \cite{Xception}.
+
+The encoder architecture is built as a depthwise separable convolution. The standard convolution layer is factorized into a depthwise convolution looking at spatial correlations and a $1 \times 1$ pointwise  convolution that detects correlations in the color channels. The underlying assumption is that the information encoded in the spatial dimensions is independent of the information in the depth channel.
+
+So the last layer in the encoder is a regular convolution with kernel size $1 \times 1$ and stride of $1$. So each neuron has a receptive field of only one pixel, therefore the input and output volumes have equal height and width. The output tensor is of size $H \times W \times M$ with the height and width and depth of the input volume. In comparison, a fully connected final layer would reduce the output into a single vector, where the class scores are arranged along the depth dimension. So the output tensor of the final layer would have size $1 \times 1 \times D$ where $D$ is the number of classes.
+
+This depthwise factorization has the advantage of drastically reducing the model size and the computational cost. The efficiency of the encoder network improves, and the number of parameters is reduced. The drawback is that the assumption that the color channel information is decoupled from the spatial information might not hold for the actual image data we are using in our model.
+
+\subsection{Implementation}
+The encoding stage consists of two separable convolutions followed by a regular $1 \times 1$ convolution with a stride of one and same padding.
 
 The purpose of the decoder block is to scale the encoder output up to the size of the input image and decode the data stored in the previous layers. It is comprised of three parts.
 \begin{itemize}
@@ -85,7 +108,7 @@ I collected $270$ data sets in the first run and $186$ data sets in the second r
 The resulting new training data set \texttt{train\_combined.zip} (file size $56.7$\,MB) consists of $4587$ image/mask combinations and can be downloaded from the \href{https://github.com/S2H-Mobile/RoboND-DeepLearning-Project-Solution/tree/master/data}{repository}. I used this data set to train the network as described in section \ref{sec:training_additional_data}. The results of this experiment can be found in table \ref{tbl:collected_data_experiment}.
 
 \section{Network Architecture and Training}
-I trained the network on a AWS \texttt{p2.xlarge} instance. The relevant code can be found in the notebook \href{https://github.com/S2H-Mobile/RoboND-DeepLearning-Project-Solution/blob/master/code/model_training.ipynb}{\texttt{model\_training.ipynb}}.
+I trained the network on a AWS \texttt{p2.xlarge} instance with the ​Udacity​ ​Robotics​ ​Laboratory​ ​Community​ ​AMI installed. The training code can be found in the notebook \href{https://github.com/S2H-Mobile/RoboND-DeepLearning-Project-Solution/blob/master/code/model_training.ipynb}{\texttt{model\_training.ipynb}}.
 
 The evaluation is done using the intersection over union metric as the final score.
 
@@ -242,4 +265,44 @@ The following improvements of the network architecture, the hyperparameter tunin
 \item Collect more image data, possibly with the target being present in a higher fraction of the camera images.
 \item In the decoder block, use transpose convolutions (see \href{https://keras.io/layers/convolutional/#conv2dtranspose}{Keras}) instead of the less accurate bilinear upsampling technique.
 \end{itemize}
+
+Regarding the task of detecting more types of objects (dog, cat, car, etc.) I did some research and found the \href{https://github.com/matterport/Mask_RCNN}{Mask R-CNN} project. As a first step I let that model run object detection on the image \texttt{5\_run6cam1\_00197.jpeg} from the validation data set. The result is encouraging, since besides the hero person a potted plant is detected as well, see figure \ref{img:example_mask_rcnn}.
+
+I'm curious to compare both projects, their architecture and data sets, for example train the Follow Me!\ network on the multiple-object images provided there and vice versa.
+
+\begin{figure}
+\noindent
+\makebox[\textwidth]{\includegraphics[width=\textwidth]{images/example_mask_rcnn.png}}
+\caption[Demo run for detecting object types]{Result of demo run for recognizing multiple objects using the Mask R-CNN model.}
+\label{img:example_mask_rcnn}
+\end{figure}
+
+\begin{thebibliography}{3}
+\bibitem{CS231n}
+ \href{http://cs231n.stanford.edu/}{Stanford CS231n}
+ \textit{Convolutional Neural Networks for Visual Recognition},
+ \href{http://cs231n.github.io/convolutional-networks/}{Class Notes on Convolutional Neural Networks}
+
+\bibitem{Xception}
+  Fran{\c{c}}ois Chollet,
+  \textit{Xception: Deep Learning with Depthwise Separable Convolutions},
+  CoRR, abs/1610.02357,
+  2016,
+  \href{http://arxiv.org/abs/1610.02357}{http://arxiv.org/abs/1610.02357}
+
+\bibitem{MobileNets}
+  Andrew G. Howard and
+               Menglong Zhu and
+               Bo Chen and
+               Dmitry Kalenichenko and
+               Weijun Wang and
+               Tobias Weyand and
+               Marco Andreetto and
+               Hartwig Adam,
+  \textit{MobileNets: Efficient Convolutional Neural Networks for Mobile Vision Applications},
+  CoRR, abs/1704.04861,
+  2017,
+  \href{http://arxiv.org/abs/1704.04861}{http://arxiv.org/abs/1704.04861}
+\end{thebibliography}
+
 \end{document}
