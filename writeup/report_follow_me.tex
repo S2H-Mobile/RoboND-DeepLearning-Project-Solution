@@ -126,7 +126,7 @@ I tuned and tested the following parameters of the FCN architecture described in
 
 For setting the initial values of these parameters I used knowledge from the classroom material, the segmentation lab and communication with other students on Slack. One such advice is to keep the network simple at the outset and add complexity later. 
 
-To test these assumptions I ran the architecture experiment as shown in table \ref{tbl:architecture_experiments}. I compared the filter size sequence $32 \rightarrow 64 \rightarrow 128$ with the sequence $32 \rightarrow 64 \rightarrow 128$. I tested the usage of one and two separable convolution layers in the decoder block.
+To test these assumptions I ran the architecture experiment as shown in table \ref{tbl:architecture_experiments}. I compared the filter size sequence $32 \rightarrow 64 \rightarrow 128$ with the sequence $64 \rightarrow 128 \rightarrow 256$. I tested the usage of one and two separable convolution layers in the decoder block.
 
 The network with two separable convolutions in the decoder and a filter size sequence of $32 \rightarrow 64 \rightarrow 128$ achieved the highest final scores.  Therefore I used this configuration in the subsequent experiments. This network is described in table \ref{tbl:fcn_architecture} and depicted in figure \ref{img:reference_architecture}.
 
@@ -276,6 +276,8 @@ I'm curious to compare both projects, their architecture and data sets, for exam
 \caption[Demo run for detecting object types]{Result of demo run for recognizing multiple objects using the Mask R-CNN model.}
 \label{img:example_mask_rcnn}
 \end{figure}
+
+On November 16 I trained a model based on the reference architecture (see table \ref{tbl:fcn_architecture}) with a filter size sequence of $32 \rightarrow 64 \rightarrow 256$. The learning rate was $0.005$, the batch size was $32$. I trained over $68$ epochs with $160$ steps per epoch. This model achieves a final score of $0.4496$. The corresponding weights file is \texttt{model\_weights\_32\_64\_256}.
 
 \begin{thebibliography}{3}
 \bibitem{CS231n}
