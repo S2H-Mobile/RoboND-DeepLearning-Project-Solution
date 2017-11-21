@@ -256,6 +256,8 @@ The model trained in tuning run $6$ (last column in table \ref{tbl:hyperparamete
 
 Against expectations, gathering additional data did not have a significant effect on the network performance. I assume that this can be improved by collecting much more image sequences, where the hero is present in the camera image, and with more variation in the background scenery.
 
+On November 16 I trained a model based on the reference architecture (see table \ref{tbl:fcn_architecture}) with a filter size sequence of $32 \rightarrow 64 \rightarrow 256$. The learning rate was $0.005$, the batch size was $32$. I trained over $68$ epochs with $160$ steps per epoch. This model achieves a final score of $0.4496$. The corresponding weights file is \texttt{model\_weights\_32\_64\_256}.
+
 \subsection{Future Enhancements}
 The following improvements of the network architecture, the hyperparameter tuning and the data collection process seem to be promising next steps to increase the performance of the model.
 \begin{itemize}
@@ -276,8 +278,6 @@ I'm curious to compare both projects, their architecture and data sets, for exam
 \caption[Demo run for detecting object types]{Result of demo run for recognizing multiple objects using the Mask R-CNN model.}
 \label{img:example_mask_rcnn}
 \end{figure}
-
-On November 16 I trained a model based on the reference architecture (see table \ref{tbl:fcn_architecture}) with a filter size sequence of $32 \rightarrow 64 \rightarrow 256$. The learning rate was $0.005$, the batch size was $32$. I trained over $68$ epochs with $160$ steps per epoch. This model achieves a final score of $0.4496$. The corresponding weights file is \texttt{model\_weights\_32\_64\_256}.
 
 \begin{thebibliography}{3}
 \bibitem{CS231n}
