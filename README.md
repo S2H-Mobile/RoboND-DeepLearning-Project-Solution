@@ -1,11 +1,18 @@
 # RoboND-DeepLearning-Project-Solution
-This is my solution of the [Follow Me! Project](https://github.com/udacity/RoboND-DeepLearning-Project) as part of the Robotics Nanodegree by Udacity. My network configuration is implemented in [this notebook](https://github.com/S2H-Mobile/RoboND-DeepLearning-Project-Solution/blob/master/code/model_training.ipynb).
+This is a solution of the [Follow Me! Project](https://github.com/udacity/RoboND-DeepLearning-Project) as part of the Robotics Nanodegree by Udacity. A convolutional neural network is trained to classify images collected by a drone in a simulated environment. The network learns to determine whether the hero person is present in the drone image.
 
-I collected additional [training data](https://github.com/S2H-Mobile/RoboND-DeepLearning-Project-Solution/blob/master/data/train_combined.zip) (~ 57 MB download) in the simulator.
+The CNN is implemented using Tensorflow and Keras.
 
+## Contents
+- The [writeup report](https://github.com/S2H-Mobile/RoboND-DeepLearning-Project-Solution/blob/master/writeup/report_follow_me.pdf).
+- The neural network is implemented in [this notebook](https://github.com/S2H-Mobile/RoboND-DeepLearning-Project-Solution/blob/master/code/model_training.ipynb).
+- Additional [training data](https://github.com/S2H-Mobile/RoboND-DeepLearning-Project-Solution/blob/master/data/train_combined.zip) collected in the simulator (~ 57 MB download).
+
+## Setup and Usage
 For setup and usage instructions follow the original README reproduced below.
 
 [![Udacity - Robotics NanoDegree Program](https://s3-us-west-1.amazonaws.com/udacity-robotics/Extra+Images/RoboND_flag.png)](https://www.udacity.com/robotics)
+
 
 ## Deep Learning Project ##
 
