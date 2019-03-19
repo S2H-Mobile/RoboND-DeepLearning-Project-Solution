@@ -5,7 +5,7 @@ The CNN is implemented using Tensorflow and Keras.
 
 ## Contents
 - The [writeup report](https://github.com/S2H-Mobile/RoboND-DeepLearning-Project-Solution/blob/master/writeup/report_follow_me.pdf).
-- The neural network is implemented in [this notebook](https://github.com/S2H-Mobile/RoboND-DeepLearning-Project-Solution/blob/master/code/model_training.ipynb).
+- The neural network is implemented in a [Jupyter notebook](https://github.com/S2H-Mobile/RoboND-DeepLearning-Project-Solution/blob/master/code/model_training.ipynb), and in a [Colab notebook](https://github.com/S2H-Mobile/RoboND-DeepLearning-Project-Solution/blob/master/code/model_training_colab.ipynb).
 - Additional [training data](https://github.com/S2H-Mobile/RoboND-DeepLearning-Project-Solution/blob/master/data/train_combined.zip) collected in the simulator (~ 57 MB download).
 
 ## Setup and Usage
